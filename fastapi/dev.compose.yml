@@ -1,0 +1,33 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: p1_fastapi
+    ports:
+      - '8080:80'
+    environment:
+      - DB_HOST
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: python -m uvicorn src.app:app --port 80 --host 0.0.0.0
+
+  db:
+    image: postgres:15-alpine
+    container_name: p1_fastapi_db
+    environment:
+      DB_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
