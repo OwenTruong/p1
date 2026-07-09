@@ -1,0 +1,23 @@
+{% macro header() %}
+<header>
+  <div>
+    <h1>JWT Mock App</h1>
+  </div>
+  <nav>
+    <ul>
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li id="nav_list__login" class="hidden">
+        <a href="/login">Login</a>
+      </li>
+      <li id="nav_list__register" class="">
+        <a href="/register">Register</a>
+      </li>
+      <li id="nav_list__protected" class="">
+        <a href="/protected">Protected</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+{% endmacro %}

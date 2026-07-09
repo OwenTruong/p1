@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
+  </head>
+  {% from './components/header.html' import header %}
+  <!-- prettier-ignore -->
+  {% from './components/footer.html' import footer %}
+  <body>
+    {{ header() }}
+    <main>
+      <section>
+        <h2>Login</h2>
+        <form action="/api/auth/login" method="post" id="form-login">
+          <div>
+            <label for="username">Username</label>
+            <input id="username" type="text" />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input id="password" type="password" />
+          </div>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    {{ footer() }}
+  </body>
+</html>
