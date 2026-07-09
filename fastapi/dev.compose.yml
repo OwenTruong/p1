@@ -5,23 +5,29 @@ services:
       dockerfile: Dockerfile.dev
     container_name: p1_fastapi
     ports:
-      - '8080:80'
+      - '8081:8081'
     environment:
-      - DB_HOST
-      - DB_NAME
-      - DB_USER
-      - DB_PASSWORD
+      DB_HOST: p1_fastapi_db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - .:/app
     depends_on:
-      - db
-    command: python -m uvicorn src.app:app --port 80 --host 0.0.0.0
+      db:
+        condition: service_healthy
+    command: python -m uvicorn src.app:app --port 8081 --host 0.0.0.0
 
   db:
     image: postgres:15-alpine
     container_name: p1_fastapi_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin_user -d metrics_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
-      DB_USER: ${DB_USER}
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
