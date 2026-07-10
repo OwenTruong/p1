@@ -9,24 +9,46 @@
   {% from './components/header.html' import header %}
   <!-- prettier-ignore -->
   {% from './components/footer.html' import footer %}
-  <body>
+  <body class="min-h-screen flex flex-col bg-gray-50">
     {{ header() }}
-    <main>
-      <section>
-        <h2>Login</h2>
+    <main class="grow flex justify-center items-center">
+      <section
+        class="bg-white flex flex-col px-8 py-4 items-center border border-gray-200 rounded-xl"
+      >
+        <h2 class="text-2xl text-indigo-700 mb-4">Login</h2>
         <form action="/api/auth/login" method="post" id="form-login">
-          <div>
-            <label for="username">Username</label>
-            <input id="username" type="text" />
+          <div class="mb-4">
+            <label for="username" class="hidden">Username</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Username"
+              class="border-b border-b-gray-200 rounded-t bg-gray-50 px-4 py-1 outline-0 focus:outline-none focus:border-b-indigo-700"
+            />
           </div>
-          <div>
-            <label for="password">Password</label>
-            <input id="password" type="password" />
+          <div class="mb-4">
+            <label for="password" class="hidden">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              class="border-b border-b-gray-200 rounded-t bg-gray-50 px-4 py-1 focus:outline-none focus:border-b-indigo-700"
+            />
           </div>
-          <div>
-            <button type="submit">Submit</button>
+          <div class="flex justify-center items-center">
+            <button
+              type="submit"
+              class="border-gray-200 rounded bg-indigo-600 text-white px-4 py-1"
+            >
+              Submit
+            </button>
           </div>
         </form>
+        <a
+          href="/register"
+          class="text-xs mt-2 text-gray-400 hover:underline underline-offset-2 decoration-gray-400"
+          >Create a new account today</a
+        >
       </section>
     </main>
     {{ footer() }}

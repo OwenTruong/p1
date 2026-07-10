@@ -11,24 +11,46 @@
   {% from './components/header.html' import header %}
   <!-- prettier-ignore -->
   {% from './components/footer.html' import footer %}
-  <body>
+  <body class="min-h-screen flex flex-col bg-gray-50">
     {{ header() }}
-    <main>
+    <main class="grow mx-4 mt-4">
       <section>
-        <h2>Our values</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam,
-          obcaecati sequi repudiandae nostrum itaque vel maiores dolores hic
-          consequatur optio suscipit deserunt nobis aut voluptatibus dicta
-          reprehenderit quos odit atque libero! Totam nihil quibusdam voluptatum
-          harum quaerat sunt nostrum, est qui sed vitae deleniti quia a atque
-          consequatur natus hic enim doloremque reprehenderit veritatis corrupti
-          iusto vel dolorum! Esse, accusamus aspernatur quaerat illo, hic amet
-          rem voluptatem doloremque, velit enim error maxime aliquid! Ipsum
-          maxime magni atque esse odit sit reiciendis, debitis dolor voluptatem.
-          Dolores, aperiam fuga accusamus ratione numquam quaerat fugit a earum
-          repellendus quos, inventore, velit deleniti repudiandae!
-        </p>
+        <h2 class="text-xl text-indigo-700 mb-4">Our values</h2>
+        <div class="flex flex-col">
+          <p class="mb-2">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam,
+            obcaecati sequi repudiandae nostrum itaque vel maiores dolores hic
+            consequatur optio suscipit deserunt nobis aut voluptatibus dicta
+            reprehenderit quos odit atque libero! Totam nihil quibusdam
+            voluptatum harum quaerat sunt nostrum, est qui sed vitae deleniti
+            quia a atque consequatur natus hic enim doloremque reprehenderit
+            veritatis corrupti iusto vel dolorum! Esse, accusamus aspernatur
+            quaerat illo, hic amet rem voluptatem doloremque, velit enim error
+            maxime aliquid! Ipsum maxime magni atque esse odit sit reiciendis,
+            debitis dolor voluptatem. Dolores, aperiam fuga accusamus ratione
+            numquam quaerat fugit a earum repellendus quos, inventore, velit
+            deleniti repudiandae!
+          </p>
+          <p class="mb-2">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit non
+            magni, aut sapiente quis veniam quo et animi tempora voluptas nisi
+            enim saepe suscipit amet? Soluta ea doloremque, ullam aut quos
+            officia dolor commodi beatae magnam corrupti iste atque laborum
+            eaque sit quae at ducimus sed animi, necessitatibus repellat esse ad
+            consequuntur minima? Magni dolor quasi omnis nostrum, sapiente
+            distinctio, harum animi vero fugiat reprehenderit, maiores iure
+            ipsam. Voluptates, dolorum? Ullam deleniti, nam aliquid dolor sunt
+            laudantium doloremque illo, quia soluta deserunt provident vel
+            tempora? Expedita rerum maiores numquam ducimus dolores cupiditate
+            minus magni laborum, praesentium officia doloribus iure voluptas.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
+            reiciendis animi velit adipisci optio, facilis iste. Ipsa, quidem
+            assumenda! Quisquam ipsam, unde in minus quo optio ad exercitationem
+            nemo architecto.
+          </p>
+        </div>
       </section>
     </main>
     {{ footer() }}

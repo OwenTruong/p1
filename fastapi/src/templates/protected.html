@@ -9,11 +9,14 @@
   {% from './components/header.html' import header %}
   <!-- prettier-ignore -->
   {% from './components/footer.html' import footer %}
-  <body>
+  <body class="min-h-screen flex flex-col bg-gray-50">
     {{ header() }}
-    <main>
+    <main class="grow mx-4 mt-4">
+      <h2 class="text-xl text-indigo-700 mb-4">Protected</h2>
       <section>
-        <h2>Hello {user.username}!</h2>
+        <h3 class="text-xl">
+          Hello <strong class="text-green-500">{user.username}</strong>!
+        </h3>
       </section>
     </main>
     {{ footer() }}

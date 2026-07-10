@@ -1,21 +1,39 @@
 {% macro header() %}
-<header>
-  <div>
-    <h1>JWT Mock App</h1>
+<header class="p-2 flex justify-between bg-indigo-700 text-white">
+  <div class="ml-4 flex justify-center items-center">
+    <a href="/">
+      <h1 class="text-xl">JWT Mock App</h1>
+    </a>
   </div>
-  <nav>
-    <ul>
-      <li>
-        <a href="/">Home</a>
+  <nav class="mr-4 py-2">
+    <ul class="flex items-center">
+      <li class="px-4">
+        <a
+          href="/"
+          class="hover:text-gray-300 hover:underline hover:underline-offset-2"
+          >Home</a
+        >
       </li>
-      <li id="nav_list__login" class="hidden">
-        <a href="/login">Login</a>
+      <li id="nav_list__login" class="hidden px-4">
+        <a
+          href="/login"
+          class="hover:text-gray-300 hover:underline hover:underline-offset-2"
+          >Login</a
+        >
       </li>
-      <li id="nav_list__register" class="">
-        <a href="/register">Register</a>
+      <li id="nav_list__register" class="px-4">
+        <a
+          href="/register"
+          class="hover:text-gray-300 hover:underline hover:underline-offset-2"
+          >Register</a
+        >
       </li>
-      <li id="nav_list__protected" class="">
-        <a href="/protected">Protected</a>
+      <li id="nav_list__protected" class="px-4">
+        <a
+          href="/protected"
+          class="hover:text-gray-300 hover:underline hover:underline-offset-2"
+          >Protected</a
+        >
       </li>
     </ul>
   </nav>
