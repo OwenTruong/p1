@@ -83,3 +83,9 @@ async def login_and_issue_token(payload: AuthPayload, response: Response):
         return {"status": "success", "detail": "Successfully authenticated session"}
     except InvalidCredentialsError as exc:
         raise HTTPException(status_code=401, detail=str(exc))
+    
+@app.post("/api/auth/logout", status_code=200)
+async def logout(response: Response):
+    """Instructs client browser to purge the active HttpOnly session token"""
+    response.delete_cookie(key="access_token", httponly=True, samesite="lax", secure=False,)
+    return {"status": "success", "detail": "Session cookie cleared"}
