@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/static/js/register.js"></script>
+    <title>Register</title>
+  </head>
+  {% from './components/header.html' import header %}
+  <!-- prettier-ignore -->
+  {% from './components/footer.html' import footer %}
+  <body>
+    {{ header() }}
+    <main>
+      <section>
+        <h2>Register</h2>
+        <form action="/api/auth/register" method="post" id="form-register">
+          <div>
+            <label for="username">Username</label>
+            <input id="username" type="text" />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input id="password" type="password" />
+          </div>
+          <div>
+            <label for="confirm-password">Confirm Password</label>
+            <input id="confirm-password" type="password" />
+          </div>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    {{ footer() }}
+  </body>
+</html>

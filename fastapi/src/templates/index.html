@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JWT Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/static/js/index.js"></script>
+  </head>
+
+  {% from './components/header.html' import header %}
+  <!-- prettier-ignore -->
+  {% from './components/footer.html' import footer %}
+  <body>
+    {{ header() }}
+    <main>
+      <section>
+        <h2>Our values</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam,
+          obcaecati sequi repudiandae nostrum itaque vel maiores dolores hic
+          consequatur optio suscipit deserunt nobis aut voluptatibus dicta
+          reprehenderit quos odit atque libero! Totam nihil quibusdam voluptatum
+          harum quaerat sunt nostrum, est qui sed vitae deleniti quia a atque
+          consequatur natus hic enim doloremque reprehenderit veritatis corrupti
+          iusto vel dolorum! Esse, accusamus aspernatur quaerat illo, hic amet
+          rem voluptatem doloremque, velit enim error maxime aliquid! Ipsum
+          maxime magni atque esse odit sit reiciendis, debitis dolor voluptatem.
+          Dolores, aperiam fuga accusamus ratione numquam quaerat fugit a earum
+          repellendus quos, inventore, velit deleniti repudiandae!
+        </p>
+      </section>
+    </main>
+    {{ footer() }}
+  </body>
+</html>

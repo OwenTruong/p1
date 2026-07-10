@@ -1,9 +1,17 @@
 
 # System & Third Party
-from fastapi import FastAPI, Request, Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import time
 from pathlib import Path
 from dotenv import load_dotenv
+import logging
+import os
+
+from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.staticfiles import StaticFiles
+
+# First Party
+from .routers import web
 
 from src.auth import create_access_token, decode_and_verify_token, AuthPayload, Token
 from src.dao import UserDAO
@@ -12,12 +20,38 @@ from src.exceptions import UserRegistrationError, InvalidCredentialsError
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / 'static'
+MODE = os.getenv("MODE", "production")
+
+logging.basicConfig(level=logging.INFO if MODE == "production" else logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 user_dao = UserDAO()
 security = HTTPBearer()
 
 app = FastAPI(title="JWT Authenticator")
 
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+@app.middleware("http")
+async def log_request_execution_latency(request: Request, call_next):
+  start_time = time.time()
+  response = await call_next(request)
+  logging.info(f"HTTP {request.method} {request.url.path} processed in {time.time() - start_time:.4f}s")
+  return response
+
+
+app.include_router(web.router)
+
+@app.get("/health", status_code=200)
+async def get_health():
+  """Used to check if API is running"""
+  try:
+    return {
+      "status": "healthy",
+    }
+  except Exception as exc:
+    raise HTTPException(status_code=500, detail=str(exc))
+  
 @app.post("/api/auth/register", status_code=status.HTTP_201_CREATED)
 async def register_account(payload: AuthPayload):
     try:
