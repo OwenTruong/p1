@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: p1_fastapi
+    env_file: '.env'
     ports:
       - '${FASTAPI_PORT}:${FASTAPI_PORT}'
     environment:
@@ -11,6 +12,9 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      FASTAPI_PORT: ${FASTAPI_PORT}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
     volumes:
       - .:/app
     depends_on:
@@ -21,8 +25,9 @@ services:
   db:
     image: postgres:15-alpine
     container_name: p1_fastapi_db
+    env_file: '.env'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin_user -d metrics_db"]
+      test: ['CMD-SHELL', 'pg_isready -U admin_user -d metrics_db']
       interval: 5s
       timeout: 5s
       retries: 5
