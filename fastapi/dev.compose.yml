@@ -4,24 +4,35 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: p1_fastapi
+    env_file: '.env'
     ports:
-      - '8080:80'
+      - '${FASTAPI_PORT}:${FASTAPI_PORT}'
     environment:
-      - DB_HOST
-      - DB_NAME
-      - DB_USER
-      - DB_PASSWORD
+      DB_HOST: p1_fastapi_db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      FASTAPI_PORT: ${FASTAPI_PORT}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
     volumes:
       - .:/app
     depends_on:
-      - db
-    command: python -m uvicorn src.app:app --port 80 --host 0.0.0.0
+      db:
+        condition: service_healthy
+    command: python -m uvicorn src.app:app --port ${FASTAPI_PORT} --host 0.0.0.0
 
   db:
     image: postgres:15-alpine
     container_name: p1_fastapi_db
+    env_file: '.env'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin_user -d metrics_db']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
-      DB_USER: ${DB_USER}
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
