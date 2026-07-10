@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: p1_fastapi
     ports:
-      - '8081:8081'
+      - '${FASTAPI_PORT}:${FASTAPI_PORT}'
     environment:
       DB_HOST: p1_fastapi_db
       DB_NAME: ${DB_NAME}
@@ -16,7 +16,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: python -m uvicorn src.app:app --port 8081 --host 0.0.0.0
+    command: python -m uvicorn src.app:app --port ${FASTAPI_PORT} --host 0.0.0.0
 
   db:
     image: postgres:15-alpine
