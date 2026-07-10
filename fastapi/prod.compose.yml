@@ -11,14 +11,17 @@ services:
       - DB_NAME
       - DB_USER
       - DB_PASSWORD
+      - FASTAPI_PORT
+      - JWT_SECRET_KEY
+      - JWT_ALGORITHM
 
   db:
     image: postgres:15-alpine
     container_name: postgres_backend
     environment:
-      DB_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      - DB_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     ports:
       - '5432:5432'
     volumes:
