@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta, timezone
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Request
 import jwt
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
@@ -15,8 +15,8 @@ class AuthPayload(BaseModel):
     password: str = Field(..., min_length=6, examples=["supersecret123"])
 
 class Token(BaseModel):
-    access_token: str
-    token_type: str
+    status: str
+    detail: str
 
 
 def create_access_token(username: str) -> str:
@@ -50,4 +50,27 @@ def decode_and_verify_token(token: str) -> dict:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Malformed or invalid authorization token signature",
             headers={"WWW-Authenticate": "Bearer"}
+        )
+
+def read_access_token(request: Request):
+    """Interceptor that extracts the bearer token from HttpOnly cookies and verifies signature"""
+    access_token = request.cookies.get("access_token")
+    
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authentication credentials",
+            headers={"WWW-Authenticate": "Cookie"}
+        )
+        
+    try:
+        token_string = access_token.replace("Bearer ", "")
+        token_payload = decode_and_verify_token(token_string) 
+        return {"identity": token_payload.get("sub")} 
+        
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Malformed or invalid authorization token signature",
+            headers={"WWW-Authenticate": "Cookie"}
         )
