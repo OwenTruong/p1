@@ -37,6 +37,11 @@ async def log_request_execution_latency(request: Request, call_next):
     logging.info(f"HTTP {request.method} {request.url.path} processed in {time.time() - start_time:.4f}s")
     return response
 
+@app.middleware("http")
+async def check_auth_status(request: Request, call_next):
+   response = await call_next(request)
+   return response
+
 
 app.include_router(web.router)
 
