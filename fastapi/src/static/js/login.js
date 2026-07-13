@@ -1,14 +1,11 @@
-const form = document.getElementById('form-register');
+const form = document.getElementById('form-login');
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
-const confirmPasswordInput = document.getElementById('confirm-password');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  if (passwordInput.value != confirmPasswordInput.value) {
-    alert('Password and Confirm Password field do not match!');
-  } else if (passwordInput.value.length < 8) {
+  if (passwordInput.value.length < 8) {
     alert('Password length must be 8 or bigger');
   } else if (/\d/.test(passwordInput.value) === false) {
     alert('Password must contain at least one number');
@@ -31,10 +28,10 @@ form.addEventListener('submit', async (e) => {
       } else {
         const json = await response.json();
         console.log(json);
-        alert(`Invalid registration: ${json.detail}`);
+        alert(`Invalid login: ${json.detail}`);
       }
     } catch (error) {
-      alert('Unable to register');
+      alert('Unable to login');
       console.error(error);
     }
   }
