@@ -2,6 +2,29 @@ const form = document.getElementById('form-login');
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
 
+async function postRequest(path, payload, successCallback = undefined) {
+  try {
+    const response = await fetch(path, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.status >= 200 && response.status <= 299) {
+      if (successCallback) await successCallback();
+    } else {
+      const json = await response.json();
+      console.log(json);
+      alert(`Invalid registration: ${json.detail}`);
+    }
+  } catch (err) {
+    alert('Unable to register');
+    console.error(err);
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -10,29 +33,13 @@ form.addEventListener('submit', async (e) => {
   } else if (/\d/.test(passwordInput.value) === false) {
     alert('Password must contain at least one number');
   } else {
-    try {
-      const payload = {
-        username: usernameInput.value,
-        password: passwordInput.value,
-      };
-      const response = await fetch(form.action, {
-        method: form.method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.status >= 200 && response.status <= 299) {
-        window.location.replace('/protected');
-      } else {
-        const json = await response.json();
-        console.log(json);
-        alert(`Invalid login: ${json.detail}`);
-      }
-    } catch (error) {
-      alert('Unable to login');
-      console.error(error);
-    }
+    const payload = {
+      username: usernameInput.value,
+      password: passwordInput.value,
+    };
+    await postRequest('/api/auth/login', payload, async () => {
+      localStorage.setItem('loggedIn', true);
+      window.location.replace('/protected');
+    });
   }
 });
