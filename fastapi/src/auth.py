@@ -12,7 +12,7 @@ TOKEN_EXPIRATION_MINUTES = 15
 
 class AuthPayload(BaseModel):
     username: str = Field(..., examples=["test_dev"])
-    password: str = Field(..., min_length=6, examples=["supersecret123"])
+    password: str = Field(..., min_length=8, examples=["supersecret123"])
 
 class Token(BaseModel):
     status: str
