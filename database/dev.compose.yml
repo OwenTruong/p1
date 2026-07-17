@@ -9,13 +9,21 @@ services:
       timeout: 5s
       retries: 5
     environment:
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
     ports:
-      - '${DB_PORT}:5432'
+      - '${DB_PORT}:${DB_PORT}'
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+    networks:
+      - app_network
 
 volumes:
   pgdata:
+
+networks:
+  app_network:
+    external: true
