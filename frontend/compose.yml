@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    container_name: frontend-web-server
+    env_file: '.env'
+    ports:
+      - '${FASTAPI_PORT}:${FASTAPI_PORT}'
+    environment:
+      MODE: ${MODE}
+      BACKEND_URL: ${BACKEND_URL}
+      FASTAPI_PORT: ${FASTAPI_PORT}
+    command: python -m uvicorn src.app:app --port ${FASTAPI_PORT} --host 0.0.0.0

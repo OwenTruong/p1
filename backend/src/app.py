@@ -6,14 +6,13 @@ import logging
 import traceback
 import os
 
+
 from fastapi import FastAPI, Request, Depends, HTTPException, status, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 
-# First Party
-from .routers import web
 
-from src.data.authorization import Authorization
+# First Party
 from src.auth import create_access_token, AuthPayload, Token, decode_and_verify_token
 from src.dao import UserDAO
 from src.exceptions import UserRegistrationError, InvalidCredentialsError
@@ -29,34 +28,6 @@ logging.basicConfig(level=logging.INFO if MODE == "production" else logging.DEBU
 user_dao = UserDAO()
 
 app = FastAPI(title="JWT Authenticator")
-
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
-@app.middleware("http")
-async def check_auth_status(request: Request, call_next):
-  access_token = request.cookies.get('access_token', None)
-  if (access_token):
-    access_token = access_token.split(' ')[1]
-    try:
-      decoded_dict = decode_and_verify_token(access_token)
-      logging.info("Successfully decoded and verified token")
-      username = decoded_dict['sub']
-      request.state.authorization = Authorization(is_authenticated=True, username=username)
-    except HTTPException as exc:
-      logging.info(f"Failed to decode and verify token. Reason: {exc.detail}")
-      request.state.authorization = Authorization(error_message=exc.detail)
-    except Exception as exc:
-      logging.info(f"Unexpected error")
-      logging.debug(exc)
-      request.state.authorization = Authorization(error_message="Internal Server Error")
-  else:
-    # potentially a security concern with how there is a difference in response latency when access_token is provided?
-    logging.info("No access token provided. Skipping authentication...")
-    request.state.authorization = Authorization()
-
-
-  response = await call_next(request)
-  return response
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
@@ -119,8 +90,6 @@ async def logging_middleware(request: Request, call_next):
                 "detail": "An internal server error occurred while executing this data operation."
             }
         )
-
-app.include_router(web.router)
 
 @app.get("/health", status_code=200)
 async def get_health():
