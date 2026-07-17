@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from .routers import web
 
 from src.data.authorization import Authorization
-from src.utils.auth import create_access_token, AuthPayload, Token, decode_and_verify_token
+from src.auth import create_access_token, AuthPayload, Token, decode_and_verify_token
 from src.dao import UserDAO
 from src.exceptions import UserRegistrationError, InvalidCredentialsError
 

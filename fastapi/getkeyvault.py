@@ -1,17 +1,3 @@
-# #!/usr/bin/env bash
-
-# # install jq for json parsing
-
-# set -o pipefail
-
-# VAULT_NAME="fastapi-secrets"
-# VAULT_URL="https://${VAULT_NAME}.vault.azure.net"
-# ENV_FILE="$(dirname '${BASH_SOURCE[0]}')"
-
-# echo $VAULT_NAME
-# echo $VAULT_URL
-# echo $ENV_FILE
-
 import os
 import json
 import subprocess
