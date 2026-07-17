@@ -15,11 +15,10 @@ env_vars_li = [
   "DB_NAME",
   "DB_USER",
   "DB_PASSWORD",
-  "DB_PORT",
   "MODE",
   "JWT_SECRET_KEY",
   "JWT_ALGORITHM",
-  "FASTAPI_PORT"
+  "BACKEND_PORT"
 ]
 
 output = subprocess.run(["curl", "-s", "-H", "Metadata: true", IMDS_URL], capture_output=True, check=True, text=True)

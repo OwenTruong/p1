@@ -10,13 +10,9 @@ ROUTERS_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROUTERS_DIR.parent
 TEMPLATES_DIR = SRC_DIR / 'templates'
 
-router = APIRouter(
-)
+router = APIRouter()
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
-
-
-
 
 @router.get("/", status_code=200, response_class=HTMLResponse)
 async def serve_home(request: Request):
