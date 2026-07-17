@@ -30,8 +30,6 @@ user_dao = UserDAO()
 
 app = FastAPI(title="JWT Authenticator")
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
 @app.middleware("http")
 async def check_auth_status(request: Request, call_next):
 	access_token = request.cookies.get('access_token', None)
