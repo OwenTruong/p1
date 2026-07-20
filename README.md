@@ -5,50 +5,105 @@ See [guidelines](./docs/Guidelines.md) for more detail.
 
 ## How to run for local development
 
-We have separated docker files into two types to prevent rebuilding images over and over again for local development:
-* Local
-  * `dev.compose.yml`
-  * `Dockerfile.dev`
-* Production
-  * `prod.compose.yml`
-  * `Dockerfile.prod`
+For our project, there are three different services that need to be started
+* Database (PostgreSQL)
+* Backend (Uvicorn FastAPI)
+* Frontend (Uvicorn FastAPI)
 
-Run the following to setup fastapi docker for local development:
+Run the following for local development:
 ```bash
-cd fastapi
-docker compose -f dev.compose.yml build
-docker compose -f dev.compose.yml up -d
+# Create the env file for docker
+cp database/.env.example database/.env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+
+docker compose -f database/compose.yml up -d
+docker compose -f backend/compose.yml up --build -d
+docker compose -f frontend/compose.yml up --build -d
 ```
 
-Run the following afterwards to restart container when there are new changes in `/fastapi/`
+To check the logs in each service, run `compose logs` like the example below:
 ```bash
-docker compose -f dev.compose.yml restart
+docker compose -f database/compose.yml logs -f
 ```
 
-The backend relies on a working database, therefore run the following to setup database docker for local development:
+Optionally, run `docker compose` in each of the services' directory instead of in the root repository directory. For example:
 ```bash
-docker network create app_network
 cd database
-docker compose -f dev.compose.yml up --build
-```
-then in a new terminal run following command to setup backend docker:
-```bash
-cd backend
-docker compose -f dev.compose.yml up --build
+docker compose up -d
+docker compose logs -f
 ```
 
 ## How to run for production
 
-Run the following to setup for Azure VM:
+### For Azure VM Database
+
+Clone the project.
 ```bash
 git clone <project>
 ```
+
+Install all of the docker dependencies.
 ```bash
 sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
 sudo usermod -aG docker $USER && newgrp docker
+```
 
-cd p1/fastapi
+Fetch the .env file from Azure Key Vault.
+```bash
+cd p1/database
 python3 ./getkeyvault.py
-docker compose -f prod.compose.yml build
-docker compose -f prod.compose.yml up -d
+```
+
+Run the database.
+```bash
+docker compose up -d
+```
+
+### For Azure VM Backend
+
+Clone the project.
+```bash
+git clone <project>
+```
+
+Install all of the docker dependencies.
+```bash
+sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER && newgrp docker
+```
+
+Fetch the .env file from Azure Key Vault.
+```bash
+cd p1/backend
+python3 ./getkeyvault.py
+```
+
+Build and run the backend.
+```bash
+docker compose up --build -d
+```
+
+### For Azure VM Frontend
+
+Clone the project.
+```bash
+git clone <project>
+```
+
+Install all of the docker dependencies.
+```bash
+sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER && newgrp docker
+```
+
+Fetch the .env file from Azure Key Vault.
+```bash
+cd p1/frontend
+python3 ./getkeyvault.py
+```
+
+Build and run the frontend.
+```bash
+docker compose up --build -d
 ```
