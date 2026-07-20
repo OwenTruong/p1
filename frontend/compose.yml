@@ -1,7 +1,7 @@
 services:
   frontend:
     build: .
-    container_name: ${FRONTEND_CONTAINER_NAME}
+    container_name: frontend-server
     env_file: '.env'
     environment:
       MODE: ${MODE}

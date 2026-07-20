@@ -1,7 +1,7 @@
 services:
   backend:
     build: .
-    container_name: ${BACKEND_CONTAINER_NAME}
+    container_name: backend-server
     env_file: '.env'
     environment:
       DB_HOST: ${DB_HOST}

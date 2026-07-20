@@ -1,11 +1,10 @@
-import os
 import json
 import subprocess
 from pathlib import Path
 
 IMDS_URL="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net"
 
-VAULT_NAME = "fastapi-secrets"
+VAULT_NAME = "vk-p1-database-prod"
 VAULT_URL = f"https://{VAULT_NAME}.vault.azure.net"
 
 DIR_PATH = Path(__file__).resolve().parent
@@ -13,8 +12,7 @@ DIR_PATH = Path(__file__).resolve().parent
 env_vars_li = [
   "DB_NAME",
   "DB_USER",
-  "DB_PASSWORD",
-  "DB_PORT"
+  "DB_PASSWORD"
 ]
 
 output = subprocess.run(["curl", "-s", "-H", "Metadata: true", IMDS_URL], capture_output=True, check=True, text=True)
