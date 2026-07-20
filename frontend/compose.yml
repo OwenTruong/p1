@@ -1,5 +1,5 @@
 services:
-  web:
+  frontend:
     build: .
     container_name: ${FRONTEND_CONTAINER_NAME}
     env_file: '.env'
@@ -7,5 +7,4 @@ services:
       MODE: ${MODE}
       BACKEND_URL: ${BACKEND_URL}
       FRONTEND_PORT: ${FRONTEND_PORT}
-    command: python -m uvicorn src.app:app --port ${FRONTEND_PORT} --host 0.0.0.0
     network_mode: 'host'
