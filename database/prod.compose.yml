@@ -21,7 +21,7 @@ services:
     networks:
       - app_network
     #  read configurations instead of system defaults
-    command: "postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf"
+    command: 'postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf'
 
 volumes:
   pgdata:
