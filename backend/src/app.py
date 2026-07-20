@@ -129,9 +129,41 @@ async def login_and_issue_token(payload: AuthPayload, response: Response):
         return {"status": "success", "detail": "Successfully authenticated session"}
     except InvalidCredentialsError as exc:
         raise HTTPException(status_code=401, detail=str(exc))
-    
+
 @app.post("/api/auth/logout", status_code=200)
 async def logout(response: Response):
     """Instructs client browser to purge the active HttpOnly session token"""
     response.delete_cookie(key="access_token", httponly=True, samesite="lax", secure=False,)
     return {"status": "success", "detail": "Session cookie cleared"}
+
+@app.post("/api/auth/token")
+async def verify_cookie_token(request: Request):
+    """
+    Validates the active session token passed automatically via the 
+    browser's HttpOnly Cookie storage mechanisms.
+    """
+    access_token = request.cookies.get("access_token")
+    
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authentication credentials",
+            headers={"WWW-Authenticate": "Cookie"}
+        )
+
+    try:
+        token_string = access_token.replace("Bearer ", "")
+        token_payload = decode_and_verify_token(token_string)
+        return {
+            "status": "success",
+            "username": token_payload.get("sub")
+        }
+    
+    except HTTPException as exc:
+        raise exc
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Malformed or invalid authorization token signature",
+            headers={"WWW-Authenticate": "Cookie"}
+        )

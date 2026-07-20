@@ -7,7 +7,7 @@ from src.data.authorization import Authorization
 from src.utils.config import get_config
 
 async def decode_and_verify_token(access_token):
-  url = get_config().backend_url + '/api/auth/token'
+  url = 'http://' + get_config().backend_url + '/api/auth/token'
   resp = request('POST', url, cookies={
     "access_token": access_token
   })
@@ -25,14 +25,15 @@ async def check_auth_status(request: Request, call_next):
     try:
       decoded_dict = await decode_and_verify_token(access_token)
       logging.info("Successfully decoded and verified token")
-      username = decoded_dict['sub']
+      logging.debug(f"check_auth_status: decoded_dict - {decoded_dict}")
+      username = decoded_dict['username']
       request.state.authorization = Authorization(is_authenticated=True, username=username)
     except HTTPException as exc:
       logging.info(f"Failed to decode and verify token. Reason: {exc.detail}")
       request.state.authorization = Authorization(error_message=exc.detail)
     except Exception as exc:
       logging.info(f"Unexpected error")
-      logging.debug(exc)
+      logging.debug(f"check_auth_status: {str(exc)}")
       request.state.authorization = Authorization(error_message="Internal Server Error")
   else:
     # potentially a security concern with how there is a difference in response latency when access_token is provided?

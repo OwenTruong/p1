@@ -10,3 +10,9 @@ services:
       BACKEND_URL: ${BACKEND_URL}
       FASTAPI_PORT: ${FASTAPI_PORT}
     command: python -m uvicorn src.app:app --port ${FASTAPI_PORT} --host 0.0.0.0
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true

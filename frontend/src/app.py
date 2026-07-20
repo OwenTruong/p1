@@ -46,7 +46,7 @@ async def get_health():
 
 @app.post("/api/auth/register", status_code=status.HTTP_201_CREATED)
 def register_account(payload: dict):
-    url=f"{config.backend_url}/api/auth/register"
+    url=f"http://{config.backend_url}/api/auth/register"
     logging.info(f"Forwarding user registration to {url} with username {payload.get('username', None)}")
     resp = request('POST', url, json=payload)
     
@@ -58,7 +58,7 @@ def register_account(payload: dict):
 
 @app.post("/api/auth/login", status_code=status.HTTP_200_OK)
 def login_and_issue_token(payload: dict, response: Response):
-    url=f"{config.backend_url}/api/auth/login"
+    url=f"http://{config.backend_url}/api/auth/login"
     logging.info(f"Forwarding user login to {url} with username {payload.get('username', None)}")
 
     resp = request('POST', url, json=payload)
@@ -74,7 +74,7 @@ def login_and_issue_token(payload: dict, response: Response):
     
 @app.post("/api/auth/logout", status_code=status.HTTP_200_OK)
 def logout(req: Request, response: Response):
-    url=f"{config.backend_url}/api/auth/logout"
+    url=f"http://{config.backend_url}/api/auth/logout"
     logging.info(f"Forwarding user logout to {url}")
 
     resp = request('POST', url, cookies={
