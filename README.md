@@ -25,6 +25,18 @@ Run the following afterwards to restart container when there are new changes in 
 docker compose -f dev.compose.yml restart
 ```
 
+The backend relies on a working database, therefore run the following to setup database docker for local development:
+```bash
+docker network create app_network
+cd database
+docker compose -f dev.compose.yml up --build
+```
+then in a new terminal run following command to setup backend docker:
+```bash
+cd backend
+docker compose -f dev.compose.yml up --build
+```
+
 ## How to run for production
 
 Run the following to setup for Azure VM:

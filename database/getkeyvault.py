@@ -11,14 +11,10 @@ VAULT_URL = f"https://{VAULT_NAME}.vault.azure.net"
 DIR_PATH = Path(__file__).resolve().parent
 
 env_vars_li = [
-  "DB_HOST",
   "DB_NAME",
   "DB_USER",
   "DB_PASSWORD",
-  "MODE",
-  "JWT_SECRET_KEY",
-  "JWT_ALGORITHM",
-  "BACKEND_PORT"
+  "DB_PORT"
 ]
 
 output = subprocess.run(["curl", "-s", "-H", "Metadata: true", IMDS_URL], capture_output=True, check=True, text=True)
