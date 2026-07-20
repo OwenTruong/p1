@@ -1,14 +1,11 @@
 # System & Third Party
 import time
 from pathlib import Path
-from dotenv import load_dotenv
 import logging
 import traceback
-import os
 
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Response
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, Request, HTTPException, status, Response
 from fastapi.responses import JSONResponse
 
 
@@ -16,14 +13,15 @@ from fastapi.responses import JSONResponse
 from src.auth import create_access_token, AuthPayload, Token, decode_and_verify_token
 from src.dao import UserDAO
 from src.exceptions import UserRegistrationError, InvalidCredentialsError
+from src.utils.config import get_config
 
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / 'static'
-MODE = os.getenv("MODE", "production")
 
-logging.basicConfig(level=logging.INFO if MODE == "production" else logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+config = get_config()
+
+logging.basicConfig(level=logging.INFO if config.mode == "production" else logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 user_dao = UserDAO()
 

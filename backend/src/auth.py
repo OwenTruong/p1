@@ -1,13 +1,12 @@
-import os
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status, Request
 import jwt
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
-load_dotenv()
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "")
-ALGORITHM = os.getenv("JWT_ALGORITHM", "")
+from src.utils.config import get_config
+
+config = get_config()
+
 TOKEN_EXPIRATION_MINUTES = 15
 
 class AuthPayload(BaseModel):
@@ -31,13 +30,13 @@ def create_access_token(username: str) -> str:
         "exp": expires_at.timestamp(), # expiration timestamp
     }
 
-    encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(payload, config.jwt_secret_key, algorithm=config.jwt_algorithm)
     return encoded_jwt
 
 def decode_and_verify_token(token: str) -> dict:
     """Decodes token payload and validates signatures and time claims"""
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, config.jwt_secret_key, algorithms=[config.jwt_algorithm])
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(
