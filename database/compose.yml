@@ -1,29 +1,17 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: p1_fastapi_db
+    container_name: ${DATABASE_CONTAINER_NAME}
     env_file: '.env'
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U admin_user -d metrics_db']
-      interval: 5s
-      timeout: 5s
-      retries: 5
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - '${DB_PORT}:${DB_PORT}'
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
-    networks:
-      - app_network
+    network_mode: 'host' # default port is 5432
 
 volumes:
   pgdata:
-
-networks:
-  app_network:
-    external: true
