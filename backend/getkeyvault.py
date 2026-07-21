@@ -29,6 +29,7 @@ tuple_li = []
 
 for env_var_name in env_vars_li:
   translated_env_var_name = env_var_name.replace('_', '-')
+  response = None
   try:
     response = subprocess.run(["curl", "-s", "-H", f"Authorization: Bearer {key_vault_token}", f"{VAULT_URL}/secrets/{translated_env_var_name}?api-version=7.4"], capture_output=True, check=True, text=True)
     value = json.loads(response.stdout)["value"]
@@ -36,6 +37,8 @@ for env_var_name in env_vars_li:
     tuple_li.append((env_var_name, value))
   except Exception as exc:
     print(f"Failed to get env name for env var {env_var_name} and translated env var {translated_env_var_name}")
+    if response: print(response.stdout)
+    if response: print(response.stderr)
     traceback.print_exc()
     exit(1)
 
