@@ -1,6 +1,7 @@
 import json
 import subprocess
 from pathlib import Path
+import traceback
 
 IMDS_URL="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net"
 
@@ -11,7 +12,7 @@ DIR_PATH = Path(__file__).resolve().parent
 
 env_vars_li = [
   "MODE",
-  "BACKEND_URL"
+  "BACKEND_URL",
   "FRONTEND_PORT"
 ]
 
@@ -29,7 +30,7 @@ for env_var_name in env_vars_li:
     tuple_li.append((env_var_name, value))
   except Exception as exc:
     print(f"Failed to get env name for env var {env_var_name} and translated env var {translated_env_var_name}")
-    print(str(exc.with_traceback))
+    traceback.print_exc()
     exit(1)
 
 with open(DIR_PATH / '.env', 'w') as f:
