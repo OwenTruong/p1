@@ -12,3 +12,4 @@ services:
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_ALGORITHM: ${JWT_ALGORITHM}
     network_mode: 'host'
+    restart: unless-stopped

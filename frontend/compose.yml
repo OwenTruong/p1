@@ -8,3 +8,4 @@ services:
       BACKEND_URL: ${BACKEND_URL}
       FRONTEND_PORT: ${FRONTEND_PORT}
     network_mode: 'host'
+    restart: unless-stopped

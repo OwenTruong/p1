@@ -17,6 +17,7 @@ services:
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     network_mode: 'host' # default port is 5432
+    restart: unless-stopped
 
 volumes:
   pgdata:
