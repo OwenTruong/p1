@@ -8,4 +8,6 @@ services:
       BACKEND_URL: ${BACKEND_URL}
       FRONTEND_PORT: ${FRONTEND_PORT}
     network_mode: 'host'
+    volumes:
+      - /var/log/app/frontend:/app/log
     restart: unless-stopped
