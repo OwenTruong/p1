@@ -30,7 +30,7 @@ for env_var_name in env_vars_li:
     tuple_li.append((env_var_name, value))
   except Exception as exc:
     print(f"Failed to get env name.")
-    print(exc)
+    print(exc.with_traceback)
     exit(1)
 
 with open(DIR_PATH / '.env', 'w') as f:
