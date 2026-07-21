@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build: .
+    container_name: frontend-server
+    env_file: '.env'
+    ports:
+      - '${FRONTEND_PORT}:${FRONTEND_PORT}'
+    environment:
+      MODE: ${MODE}
+      BACKEND_URL: ${BACKEND_URL}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true
