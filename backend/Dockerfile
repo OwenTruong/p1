@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE $BACKEND_PORT
 # python -m uvicorn src.app:app --port 80 --host 0.0.0.0 --app-dir src
-CMD ["python", "-m", "uvicorn", "src.app:app", "--port", "${BACKEND_PORT}", "--host", "0.0.0.0", "--app-dir", "src"]
+CMD python -m uvicorn src.app:app --port ${BACKEND_PORT} --host 0.0.0.0 --app-dir src

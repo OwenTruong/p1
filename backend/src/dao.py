@@ -1,17 +1,18 @@
-import os
 import psycopg2
 import hashlib
 from src.exceptions import DatabaseConnectionError, UserRegistrationError, InvalidCredentialsError
+from src.utils.config import get_config
 
 class UserDAO:
     """DAO Layer abstraciton for managing authentication"""
 
     def __init__(self):
         # Read parameters provided by Docker Compose environment variables
-        self.host = os.getenv("DB_HOST", "db")
-        self.database = os.getenv("DB_NAME", "postgres")
-        self.user = os.getenv("DB_USER", "postgres")
-        self.password = os.getenv("DB_PASSWORD", "secret")
+        config = get_config()
+        self.host = config.db_host
+        self.database = config.db_name
+        self.user = config.db_user
+        self.password = config.db_password
         self._ensure_table_exists()
 
     def _get_connection(self):
