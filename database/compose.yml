@@ -3,7 +3,7 @@ services:
     image: postgres:15-alpine
     container_name: database-server
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U admin_user -d metrics_db']
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -18,6 +18,17 @@ services:
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     network_mode: 'host' # default port is 5432
     restart: unless-stopped
+
+  postgresql-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgresql-exporter
+    environment:
+      DATA_SOURCE_NAME: 'postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}?sslmode=disable'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    network_mode: 'host'
 
 volumes:
   pgdata:
