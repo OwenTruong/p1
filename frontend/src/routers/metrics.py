@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from psutil import cpu_percent, virtual_memory
 
 
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Response
 
 ROUTERS_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROUTERS_DIR.parent
@@ -25,8 +25,6 @@ vm_cpu_utilization {cpu_utilization}
 vm_mem_total {mem_total}
 vm_mem_used {mem_used}
 """
-        return {
-            "status": "healthy",
-            }
+        return Response(content=content, media_type="text/plain")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
