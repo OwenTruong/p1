@@ -1,62 +1,31 @@
 # System & Third Party
 import time
 from pathlib import Path
-from dotenv import load_dotenv
 import logging
 import traceback
-import os
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Response
-from fastapi.staticfiles import StaticFiles
+
+from fastapi import FastAPI, Request, HTTPException, status, Response
 from fastapi.responses import JSONResponse
 
-# First Party
-from .routers import web
 
-from src.data.authorization import Authorization
+# First Party
 from src.auth import create_access_token, AuthPayload, Token, decode_and_verify_token
 from src.dao import UserDAO
 from src.exceptions import UserRegistrationError, InvalidCredentialsError
+from src.utils.config import get_config
 
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / 'static'
-MODE = os.getenv("MODE", "production")
 
-logging.basicConfig(level=logging.INFO if MODE == "production" else logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+config = get_config()
+
+logging.basicConfig(level=logging.INFO if config.mode == "production" else logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 user_dao = UserDAO()
 
 app = FastAPI(title="JWT Authenticator")
-
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
-@app.middleware("http")
-async def check_auth_status(request: Request, call_next):
-  access_token = request.cookies.get('access_token', None)
-  if (access_token):
-    access_token = access_token.split(' ')[1]
-    try:
-      decoded_dict = decode_and_verify_token(access_token)
-      logging.info("Successfully decoded and verified token")
-      username = decoded_dict['sub']
-      request.state.authorization = Authorization(is_authenticated=True, username=username)
-    except HTTPException as exc:
-      logging.info(f"Failed to decode and verify token. Reason: {exc.detail}")
-      request.state.authorization = Authorization(error_message=exc.detail)
-    except Exception as exc:
-      logging.info(f"Unexpected error")
-      logging.debug(exc)
-      request.state.authorization = Authorization(error_message="Internal Server Error")
-  else:
-    # potentially a security concern with how there is a difference in response latency when access_token is provided?
-    logging.info("No access token provided. Skipping authentication...")
-    request.state.authorization = Authorization()
-
-
-  response = await call_next(request)
-  return response
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
@@ -120,8 +89,6 @@ async def logging_middleware(request: Request, call_next):
             }
         )
 
-app.include_router(web.router)
-
 @app.get("/health", status_code=200)
 async def get_health():
     """Used to check if API is running"""
@@ -160,9 +127,41 @@ async def login_and_issue_token(payload: AuthPayload, response: Response):
         return {"status": "success", "detail": "Successfully authenticated session"}
     except InvalidCredentialsError as exc:
         raise HTTPException(status_code=401, detail=str(exc))
-    
+
 @app.post("/api/auth/logout", status_code=200)
 async def logout(response: Response):
     """Instructs client browser to purge the active HttpOnly session token"""
     response.delete_cookie(key="access_token", httponly=True, samesite="lax", secure=False,)
     return {"status": "success", "detail": "Session cookie cleared"}
+
+@app.post("/api/auth/token")
+async def verify_cookie_token(request: Request):
+    """
+    Validates the active session token passed automatically via the 
+    browser's HttpOnly Cookie storage mechanisms.
+    """
+    access_token = request.cookies.get("access_token")
+    
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authentication credentials",
+            headers={"WWW-Authenticate": "Cookie"}
+        )
+
+    try:
+        token_string = access_token.replace("Bearer ", "")
+        token_payload = decode_and_verify_token(token_string)
+        return {
+            "status": "success",
+            "username": token_payload.get("sub")
+        }
+    
+    except HTTPException as exc:
+        raise exc
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Malformed or invalid authorization token signature",
+            headers={"WWW-Authenticate": "Cookie"}
+        )

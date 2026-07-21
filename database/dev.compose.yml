@@ -8,6 +8,8 @@ services:
       timeout: 5s
       retries: 5
     env_file: '.env'
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -16,7 +18,12 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
-    network_mode: 'host' # default port is 5432
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true
 
 volumes:
   pgdata:

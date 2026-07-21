@@ -3,8 +3,15 @@ services:
     build: .
     container_name: frontend-server
     env_file: '.env'
+    ports:
+      - '${FRONTEND_PORT}:${FRONTEND_PORT}'
     environment:
       MODE: ${MODE}
       BACKEND_URL: ${BACKEND_URL}
       FRONTEND_PORT: ${FRONTEND_PORT}
-    network_mode: 'host'
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true

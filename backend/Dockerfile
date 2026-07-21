@@ -2,11 +2,13 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+ARG BACKEND_PORT
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 80
+EXPOSE $BACKEND_PORT
 # python -m uvicorn src.app:app --port 80 --host 0.0.0.0 --app-dir src
-# CMD ["python", "-m", "uvicorn", "src.app:app", "--port", "80", "--host", "0.0.0.0", "--app-dir", "src"]
+CMD python -m uvicorn src.app:app --port ${BACKEND_PORT} --host 0.0.0.0 --app-dir src
