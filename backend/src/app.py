@@ -11,6 +11,7 @@ from src.dao import UserDAO
 from src.exceptions import UserRegistrationError, InvalidCredentialsError
 from src.utils.config import get_config
 from src.middleware.logging import logging_middleware
+from src.routers import metrics
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -25,6 +26,8 @@ user_dao = UserDAO()
 app = FastAPI(title="JWT Authenticator")
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
+
+app.include_router(metrics.router)
 
 @app.get("/health", status_code=200)
 async def get_health():

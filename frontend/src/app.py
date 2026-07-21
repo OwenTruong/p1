@@ -13,7 +13,7 @@ from requests import request
 
 
 # First Party
-from src.routers import web
+from src.routers import web, metrics
 from src.utils.config import get_config
 from src.middlewares.check_auth_state import check_auth_status
 from src.middlewares.logging_middleware import logging_middleware
@@ -30,9 +30,10 @@ app = FastAPI(title="JWT Authenticator")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=check_auth_status)
-app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware) 
 
 app.include_router(web.router)
+app.include_router(metrics.router, prefix="/metrics")
 
 @app.get("/health", status_code=200)
 async def get_health():
