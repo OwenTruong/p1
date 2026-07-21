@@ -17,21 +17,14 @@ cp database/.env.example database/.env
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 
-docker compose -f database/compose.yml up -d
-docker compose -f backend/compose.yml up --build -d
+docker compose -f database/dev.compose.yml up -d
+docker compose -f backend/dev.compose.yml up --build -d
 docker compose -f frontend/compose.yml up --build -d
 ```
 
 To check the logs in each service, run `compose logs` like the example below:
 ```bash
-docker compose -f database/compose.yml logs -f
-```
-
-Optionally, run `docker compose` in each of the services' directory instead of in the root repository directory. For example:
-```bash
-cd database
-docker compose up -d
-docker compose logs -f
+docker compose -f database/dev.compose.yml logs -f
 ```
 
 ## How to run for production
