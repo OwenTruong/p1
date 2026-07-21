@@ -9,5 +9,4 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
     network_mode: 'host'
     volumes:
-      - .:/app
       - /var/log/app/frontend:/app/log
