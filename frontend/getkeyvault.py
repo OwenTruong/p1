@@ -21,12 +21,17 @@ key_vault_token = json.loads(output.stdout)["access_token"]
 tuple_li = []
 
 for env_var_name in env_vars_li:
-  translated_env_var_name = env_var_name.replace('_', '-')
+  try:
+    translated_env_var_name = env_var_name.replace('_', '-')
 
-  response = subprocess.run(["curl", "-s", "-H", f"Authorization: Bearer {key_vault_token}", f"{VAULT_URL}/secrets/{translated_env_var_name}?api-version=7.4"], capture_output=True, check=True, text=True)
-  value = json.loads(response.stdout)["value"]
+    response = subprocess.run(["curl", "-s", "-H", f"Authorization: Bearer {key_vault_token}", f"{VAULT_URL}/secrets/{translated_env_var_name}?api-version=7.4"], capture_output=True, check=True, text=True)
+    value = json.loads(response.stdout)["value"]
 
-  tuple_li.append((env_var_name, value))
+    tuple_li.append((env_var_name, value))
+  except Exception as exc:
+    print(f"Failed to get env name.")
+    print(exc)
+    exit(1)
 
 with open(DIR_PATH / '.env', 'w') as f:
   lines = [ f"{k}={v}\n" for k, v in tuple_li]
