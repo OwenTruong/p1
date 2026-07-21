@@ -1,9 +1,11 @@
+import json 
 import time
-import logging
 import traceback
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
+
+from src.utils.azure_logger import azure_logger
 
 async def logging_middleware(request: Request, call_next):
     """Automatically captures application errors,
@@ -34,12 +36,7 @@ async def logging_middleware(request: Request, call_next):
         elif response.status_code >= 400:
             payload["severity"] = "WARNING"
         
-        logging.log(
-            logging.INFO if payload["severity"] == "INFO" else logging.ERROR,
-            f"HTTP {payload['method']} {payload['path']} processed in {payload['latency_seconds']}s with status {payload['status_code']}"
-        )
-        
-        # implement Azure Log Analytics Data Ingestion API endpoint delivery logic
+        azure_logger.info(json.dumps(payload))
         
         return response
 
@@ -51,12 +48,7 @@ async def logging_middleware(request: Request, call_next):
         payload["exception"] = f"{type(exc).__name__}: {str(exc)}"
         payload["traceback"] = traceback.format_exc()
         
-        logging.critical(
-            f"CRITICAL EXCEPTION: HTTP {payload['method']} {payload['path']} failed after {payload['latency_seconds']}s. "
-            f"Details: {payload['exception']}\n{payload['traceback']}"
-        )
-        
-        # implement Azure Log Analytics Data Ingestion API endpoint delivery logic
+        azure_logger.error(json.dumps(payload))
         
         return JSONResponse(
             status_code=500,
