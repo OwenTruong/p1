@@ -14,3 +14,4 @@ services:
     network_mode: 'host'
     volumes:
       - /var/log/app/backend:/app/logs
+    restart: unless-stopped
