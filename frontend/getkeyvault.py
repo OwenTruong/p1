@@ -4,7 +4,7 @@ from pathlib import Path
 
 IMDS_URL="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net"
 
-VAULT_NAME = "vk-p1-frontend-prod"
+VAULT_NAME = "kv-p1-frontend-prod"
 VAULT_URL = f"https://{VAULT_NAME}.vault.azure.net"
 
 DIR_PATH = Path(__file__).resolve().parent
