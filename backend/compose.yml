@@ -13,5 +13,5 @@ services:
       JWT_ALGORITHM: ${JWT_ALGORITHM}
     network_mode: 'host'
     volumes:
-      - /var/log/app/backend:/app/logs
+      - ./logs:/app/logs
     restart: unless-stopped
