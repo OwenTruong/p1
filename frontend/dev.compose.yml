@@ -11,6 +11,9 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
     networks:
       - app_network
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
 
 networks:
   app_network:
